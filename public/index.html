@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<style>
+#pings span{
+  margin: 12px 2px;
+}
+
+	.ok {
+		color: #000000;
+		padding: 3px 6px;
+		border-radius:5px;
+		animation: myfirst 0.3s;
+		-webkit-animation: myfirst 0.3s; /* Safari and Chrome */
+		background-color: greenyellow;
+	}
+
+	@keyframes myfirst
+	{
+		0%   {background-color: greenyellow;}
+		5%   {background-color: cornsilk;}
+		35%   {background-color: greenyellow;}
+		100% {background-color: palegreen;}
+	}
+
+	@-webkit-keyframes myfirst /* Safari and Chrome */
+	{
+		0%   {background-color: greenyellow;}
+		5%   {background-color: cornsilk;}
+		35%   {background-color: greenyellow;}
+		100% {background-color: palegreen;}
+	}
+
+	@keyframes out
+	{
+		0%   {background-color: palegreen;}
+		60% {background-color: darkseagreen;}
+		100% {background-color: blanchedalmond;}
+	}
+
+	@-webkit-keyframes out /* Safari and Chrome */
+	{
+		0%   {background-color: palegreen;}
+		60% {background-color: darkseagreen;}
+		100% {background-color: blanchedalmond;}
+	}
+
+	.idle{
+		padding: 3px 6px;
+		border-radius:5px;
+		animation: out 300s;
+		-webkit-animation: out 300s; /* Safari and Chrome */
+		color: #000000;
+		background-color: blanchedalmond;
+	}
+
+	.not-ok{
+		background-color: orangered;
+		color: #000000;
+		padding: 3px 6px;
+		border-radius:5px;
+	}
+
+	.err{
+		color: orangered;
+	}
+
+	.warn {
+		color:yellow;
+	}
+	.btn{
+		color:palegoldenrod;
+	}
+
+body{
+	background-color: #101c30;
+	color: lightsteelblue;
+}
+</style>
+
+    </head>
+    <body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+var socket = io.connect(location.href+"msg");//http://cbping.azurewebsites.net/
+socket.on('message', function (data) {
+//  console.log("msg: " + data);
+
+  var f = $("#out" );
+  var msgs = f.html().split("\n" );
+
+  if ( msgs.length > 200){
+    msgs.pop();
+  }
+
+	msgs.unshift(data);
+
+	f.html( msgs.join("\n") );
+});
+
+var t = [];
+var timeout = 15*60*1000; // 15 minut
+
+var idleT = [];
+var alive = io.connect(location.href+"ping");//http://cbping.azurewebsites.net/
+
+alive.on('ping', function (data) {
+//	console.log("ping: ", data.name);
+	isOk(data.name);
+	clearTimeout( t[data.name] );
+	clearTimeout( idleT[data.name] );
+
+	idleT[data.name] = setTimeout(function(){
+		idle(data.name);
+	}, 333);
+
+	t[data.name] = setTimeout(function(){
+		notOk(data.name);
+	}, sessionStorage.getItem("idle") || timeout)
+
+});
+
+
+
+function idle(el){
+	var f = document.querySelector( "#" + el );
+	f.setAttribute('class', 'idle');
+
+}
+
+
+function notOk(el){
+	var f = document.querySelector( "#" + el );
+	f.setAttribute('class', 'not-ok');
+
+	try{
+		if (!sessionStorage.getItem("mute"))
+			document.querySelector("#hlaps").play();
+	} catch(e){
+		console.error('hlaps')
+	}
+
+}
+
+function isOk(el){
+	var f = document.querySelector( "#" + el );
+  if (!f){
+    $('#pings').append('<span id="' + el + '">'+ el +'</span>');
+  }
+$( "#" + el ).attr('class', 'ok');  
+	//f.setAttribute('class', 'idle');
+	//f.setAttribute('class', 'ok');
+}
+
+$( document ).ready(function() {
+	$("#unmute" ).toggle();
+
+	$("#mute").on('click', function(){
+		sessionStorage.setItem("mute",1);
+		$("#unmute" ).toggle();
+		$("#mute" ).toggle();
+	});
+
+	$("#unmute").on('click', function(){
+		sessionStorage.setItem("mute","");
+		$("#unmute" ).toggle();
+		$("#mute" ).toggle();
+	});
+
+});
+
+
+</script>
+<audio id="hlaps" src="hlaps.mp3"></audio>
+<div id="pings">
+</div>
+<pre style="font-family: 'Lucida Console', monospace; font-size: 8pt;"  id="out"></pre>
+<a id="mute" class="btn" href="javascript:void(0)">Bez dźwięków</a>
+<a id="unmute" class="btn" href="javascript:void(0)">Powiadomienia dźwiękiem</a>
+</body>
+</html>
+
+<!--
+<script>
+function notify() {
+  var havePermission = window.webkitNotifications.checkPermission();
+  if (havePermission == 0) {
+    // 0 is PERMISSION_ALLOWED
+    var notification = window.webkitNotifications.createNotification(
+      'http://i.stack.imgur.com/dmHl0.png',
+      'Chrome notification!',
+    'Here is the notification text'
+    );
+    
+    notification.onclick = function () {
+      window.open("http://stackoverflow.com/a/13328397/1269037");
+      notification.close();
+    }
+    notification.show();
+  } else {
+      window.webkitNotifications.requestPermission();
+  }
+}  
+</script>
+
+<div style="width: 300px; height: 300px; background: yellow" onclick="notify()">
+Cick here to notify
+</div>
+-->

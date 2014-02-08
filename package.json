@@ -1,0 +1,15 @@
+{
+  "name": "Logor-PAIL",
+  "version": "0.0.1",
+  "author": "Maciej Jankowski <maj1337@gmail.com>",
+  "description": "Prosty panel aktywności i logowania",
+  "main": "./server.js",
+  "dependencies": {
+    "nconf": "~0.6.9",
+    "express": "~3.4.7",
+    "socket.io": "~0.9.16"
+  },
+  "engines": {
+    "node": ">=0.6.x"
+  }
+}
