@@ -1,11 +1,16 @@
 This is LOGOR - two things
 ====================
 
-Logor is a *log sink* to catch all your **debug messages** from both server side and client side - all in one place. Now with socket.io.
- AND more importantly:
-LOGOR is a **watchdog timer** - this means - it will *bark* when your app is stuck.
+Logor is a *log sink* to catch all your **debug messages** from both server side and client side - all in one place. Now with socket.io. AND more importantly:
+
+LOGOR is a **watchdog timer** - it will *bark* when your app is stuck.
 
 I made it for a project with many loose ends - several components working together and I had to monitor them all and make sure they are all operational.
+
+Like this:
+![](https://dl.dropboxusercontent.com/u/19020828/logor.png)
+
+
 
 why the hell would you want LOGOR
 ==================
