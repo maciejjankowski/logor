@@ -1,5 +1,6 @@
 /**
  * Created by mj on 16.02.14.
+ * TODO: zangularować
  */
 var socket = io.connect(location.protocol + "//" + location.host);//http://cbping.azurewebsites.net/
 socket.on('connect', function(socket){
