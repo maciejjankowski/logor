@@ -3,6 +3,10 @@
 
  https://github.com/flatiron/winston
  logs.papertrailapp.com:28135
+
+ TODO: http://www.html5rocks.com/en/tutorials/frameworks/angular-websockets/
+ https://github.com/btford/angular-socket-io
+ http://stackoverflow.com/questions/14389049/how-to-use-angularjs-with-socket-io
  * */
 {
 var express = require('express');
