@@ -65,13 +65,22 @@
 		border-radius:5px;
 	}
 
-	.err{
+	.error{
 		color: orangered;
 	}
 
 	.warn {
 		color:yellow;
 	}
+
+.info {
+	color:aliceblue;
+}
+
+.log {
+	color: lawngreen;
+}
+
 	.btn{
 		color:palegoldenrod;
 	}
@@ -86,100 +95,14 @@ body{
     <body>
 
 <script src="/socket.io/socket.io.js"></script>
-<script>
-var socket = io.connect(location.href+"msg");//http://cbping.azurewebsites.net/
-socket.on('message', function (data) {
-//  console.log("msg: " + data);
+<script src="logorServer.js"></script>
 
-  var f = $("#out" );
-  var msgs = f.html().split("\n" );
-
-  if ( msgs.length > 200){
-    msgs.pop();
-  }
-
-	msgs.unshift(data);
-
-	f.html( msgs.join("\n") );
-});
-
-var t = [];
-var timeout = 15*60*1000; // 15 minut
-
-var idleT = [];
-var alive = io.connect(location.href+"ping");//http://cbping.azurewebsites.net/
-
-alive.on('ping', function (data) {
-//	console.log("ping: ", data.name);
-	isOk(data.name);
-	clearTimeout( t[data.name] );
-	clearTimeout( idleT[data.name] );
-
-	idleT[data.name] = setTimeout(function(){
-		idle(data.name);
-	}, 333);
-
-	t[data.name] = setTimeout(function(){
-		notOk(data.name);
-	}, sessionStorage.getItem("idle") || timeout)
-
-});
-
-
-
-function idle(el){
-	var f = document.querySelector( "#" + el );
-	f.setAttribute('class', 'idle');
-
-}
-
-
-function notOk(el){
-	var f = document.querySelector( "#" + el );
-	f.setAttribute('class', 'not-ok');
-
-	try{
-		if (!sessionStorage.getItem("mute"))
-			document.querySelector("#hlaps").play();
-	} catch(e){
-		console.error('hlaps')
-	}
-
-}
-
-function isOk(el){
-	var f = document.querySelector( "#" + el );
-  if (!f){
-    $('#pings').append('<span id="' + el + '">'+ el +'</span>');
-  }
-$( "#" + el ).attr('class', 'ok');  
-	//f.setAttribute('class', 'idle');
-	//f.setAttribute('class', 'ok');
-}
-
-$( document ).ready(function() {
-	$("#unmute" ).toggle();
-
-	$("#mute").on('click', function(){
-		sessionStorage.setItem("mute",1);
-		$("#unmute" ).toggle();
-		$("#mute" ).toggle();
-	});
-
-	$("#unmute").on('click', function(){
-		sessionStorage.setItem("mute","");
-		$("#unmute" ).toggle();
-		$("#mute" ).toggle();
-	});
-
-});
-
-
-</script>
 <audio id="hlaps" src="hlaps.mp3"></audio>
-<div id="pings">
-</div>
+
+<div id="pings"></div>
+
 <pre style="font-family: 'Lucida Console', monospace; font-size: 8pt;"  id="out"></pre>
+
 <a id="mute" class="btn" href="javascript:void(0)">Bez dźwięków</a>
 <a id="unmute" class="btn" href="javascript:void(0)">Powiadomienia dźwiękiem</a>
 </body>
