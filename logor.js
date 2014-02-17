@@ -89,4 +89,15 @@ exports.error = function LR(){
     slog.emit('msg', {type:'error', time:ts(), body: args.join("\t") });
 }
 
-
+exports.pop = function(){
+  var args = Array.prototype.slice.call(arguments, 0);
+//  args.push('\033[37m');
+//  args.unshift('\033[31m ');
+  args.unshift(ts());
+  console.info.apply(null, args);
+//  args.pop();
+//  args.shift();
+//  args.shift();
+  if (slog.socket.connected)
+    slog.emit('msg', {type:'pop', time:ts(), body: args.join("\t") });
+}

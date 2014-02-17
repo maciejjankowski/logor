@@ -40,6 +40,10 @@ function showMessage(data){
   msgs.unshift(msg);
 
   f.html( msgs.join("\n") );
+
+  if (data.type == 'pop' && !sessionStorage.getItem("mute")){
+      document.querySelector("#pop").play();
+  }
 } // showMessage
 
 
