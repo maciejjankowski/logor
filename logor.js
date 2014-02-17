@@ -6,12 +6,21 @@ nconf.env().file({file: 'settings.json'});
 
 var io = require('socket.io-client');
 var slog = io.connect(nconf.get("logServer"));
-//var sping = io.connect(nconf.get("logServer")+"/ping");
 
+/********************************************************
 
+ For client-side logging, instead of the above lines:
+ 1. Include socket.io as you would normally do in <script> tag
+ and:
+ 2.
+ var slog = io.connect( "http://" + host + namespace);
+
+ *******************************************************/
 function ts(){
-  return new Date( (new Date().getTime()) + 1000 * 60 * 60).toJSON().replace("T", " ").replace("Z",""); // czy będzie działał po zmianie czasu?
+  return new Date( (new Date().getTime()) + 1000 * 60 * 60).toJSON().replace("T", " ").replace("Z","");
 }
+
+// ... AND rename exports to whatever you like. Say: 'L'
 
 exports.ping = function (name, timeout){
   if (slog.socket.connected)
